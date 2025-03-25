@@ -114,6 +114,10 @@ pub fn resolve_stmt<'ctx>(
                             let rval = resolve_expr(env, codegen, scope, rhe);
                             scope.set_var(env, codegen, var, access, rval.as_basic_value_enum());
                         }
+                        AssignOp::AssignSignal => {
+                            let rval = resolve_expr(env, codegen, scope, rhe);
+                            scope.set_var(env, codegen, var, access, rval.as_basic_value_enum());
+                        }
                         _ => unreachable!(),
                     },
                     Statement::Declaration {

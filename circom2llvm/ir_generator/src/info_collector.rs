@@ -1,5 +1,6 @@
 use crate::{scope_information::ScopeInformation, template::TemplateInformation};
 use program_structure::ast::{Expression, SignalType, Statement, VariableType};
+use crate::statement::print_stmt;
 
 pub fn collect_depended_components<'ctx>(
     stmt: &Statement,
@@ -63,7 +64,23 @@ pub fn init_template_info(stmts: &Vec<&Statement>) -> TemplateInformation {
                                     }
                                 };
                             }
-                            _ => unreachable!(),
+                            Statement::Substitution { var, .. } => {
+                                match signal_type {
+                                    SignalType::Input => {
+                                        template.add_input(var);
+                                    }
+                                    SignalType::Intermediate => {
+                                        template.add_intermediate(var);
+                                    }
+                                    SignalType::Output => {
+                                        template.add_output(var);
+                                    }
+                                };
+                            }
+                            _ => {
+                            println!("❗ unexpected statement in init: {}", print_stmt(&init));
+                            unreachable!()
+                            }
                         }
                     }
                 }
